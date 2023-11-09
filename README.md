@@ -10,7 +10,7 @@ En este repositorio se encuentra la base de datos sobre jardineria y el readme c
 
 ## CONSULTAS JARDINERIA
 
-1.4.5 Consultas multitabla (Composición interna)
+### 1.4.5 Consultas multitabla (Composición interna)
 
 Resuelva todas las consultas utilizando la sintaxis de SQL1 y SQL2. Las consultas con sintaxis de SQL2 se deben resolver con INNER JOIN y NATURAL JOIN.
 
@@ -127,4 +127,80 @@ Resuelva todas las consultas utilizando la sintaxis de SQL1 y SQL2. Las consulta
     JOIN producto pr ON d.codigo_producto = pr.codigo_producto
     GROUP BY codigo_cliente
     ORDER BY codigo_cliente;
+    ```
+
+### 1.4.6 Consultas multitabla (Composición externa)
+
+Resuelva todas las consultas utilizando las cláusulas LEFT JOIN, RIGHT JOIN, NATURAL LEFT JOIN y NATURAL RIGHT JOIN.
+
+1. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago.
+
+    ```sql
+
+    ```
+
+2. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pedido.
+
+    ```sql
+
+    ```
+
+3. Devuelve un listado que muestre los clientes que no han realizado ningún pago y los que no han realizado ningún pedido.
+
+    ```sql
+
+    ```
+
+4. Devuelve un listado que muestre solamente los empleados que no tienen una oficina asociada.
+
+    ```sql
+
+    ```
+
+5. Devuelve un listado que muestre solamente los empleados que no tienen un cliente asociado.
+
+    ```sql
+
+    ```
+
+6. Devuelve un listado que muestre solamente los empleados que no tienen un cliente asociado junto con los datos de la oficina donde trabajan.
+
+    ```sql
+
+    ```
+
+7. Devuelve un listado que muestre los empleados que no tienen una oficina asociada y los que no tienen un cliente asociado.
+
+    ```sql
+
+    ```
+
+8. Devuelve un listado de los productos que nunca han aparecido en un pedido.
+
+    ```sql
+
+    ```
+
+9. Devuelve un listado de los productos que nunca han aparecido en un pedido. El resultado debe mostrar el nombre, la descripción y la imagen del producto.
+
+    ```sql
+
+    ```
+
+10. Devuelve las oficinas donde no trabajan ninguno de los empleados que hayan sido los representantes de ventas de algún cliente que haya realizado la compra de algún producto de la gama Frutales.
+
+    ```sql
+
+    ```
+
+11. Devuelve un listado con los clientes que han realizado algún pedido pero no han realizado ningún pago.
+
+    ```sql
+
+    ```
+
+12. Devuelve un listado con los datos de los empleados que no tienen clientes asociados y el nombre de su jefe asociado.
+
+    ```sql
+
     ```
