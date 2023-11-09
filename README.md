@@ -267,36 +267,54 @@ Resuelva todas las consultas utilizando las cláusulas LEFT JOIN, RIGHT JOIN, NA
 1. Devuelve un listado con el código de oficina y la ciudad donde hay oficinas.
    
     ```sql
-
+    SELECT o.codigo_oficina, o.ciudad
+    FROM oficina o
+    ORDER BY o.codigo_oficina;
     ```
 
-1. Devuelve un listado con la ciudad y el teléfono de las oficinas de España.
+2. Devuelve un listado con la ciudad y el teléfono de las oficinas de España.
     
     ```sql
-
+    SELECT o.ciudad, o.telefono
+    FROM oficina o
+    WHERE o.pais = 'España'
+    ORDER BY o.ciudad;
     ```
 
 3. Devuelve un listado con el nombre, apellidos y email de los empleados cuyo jefe tiene un código de jefe igual a 7.
     
     ```sql
-
+    SELECT o.nombre, o.apellido1, o.apellido2, o.email
+    FROM empleado o
+    WHERE o.codigo_jefe = 7
+    ORDER BY o.nombre;
     ```
 
 4. Devuelve el nombre del puesto, nombre, apellidos y email del jefe de la empresa.
 
     ```sql
-
+    SELECT e.puesto, e.nombre, e.apellido1, e.apellido2, e.email
+    FROM empleado e
+    WHERE e.codigo_jefe IS NULL
+    ORDER BY e.nombre;
     ```
 
 5. Devuelve un listado con el nombre, apellidos y puesto de aquellos empleados que no sean representantes de ventas.
 
     ```sql
-
+    SELECT e.nombre, e.apellido1, e.apellido2, e.puesto
+    FROM empleado e
+    LEFT JOIN cliente c ON e.codigo_empleado = c.codigo_empleado_rep_ventas
+    WHERE c.codigo_empleado_rep_ventas IS NULL
+    ORDER BY e.nombre;
     ```
 6. Devuelve un listado con el nombre de los todos los clientes españoles.
 
     ```sql
-
+    SELECT c.nombre_cliente
+    FROM cliente c
+    WHERE c.pais = 'Spain'
+    ORDER BY c.nombre_cliente;
     ```
 
 7. Devuelve un listado con los distintos estados por los que puede pasar un pedido.
