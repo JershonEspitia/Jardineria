@@ -543,10 +543,10 @@ Utilizando la función ADDDATE de Mysql.
 
     ```sql
     SELECT e.nombre, e.apellido1, e.apellido2, e.email
-    FROM empelado e
-    WHERE 'Alberto Soria' = (
-        SELECT CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2)
+    FROM empleado e
+    WHERE e.codigo_jefe = (
+        SELECT e.codigo_empleado
         FROM empleado e
-        WHERE 
+        WHERE UPPER(CONCAT(e.nombre, ' ', e.apellido1)) = 'ALBERTO SORIA'
     );
     ```
