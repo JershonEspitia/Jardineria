@@ -393,7 +393,7 @@ Utilizando la función ADDDATE de Mysql.
 
     <!-- CON SUMA(+) -->
     ```sql
-    SELECT p.codigo_pedido, p.codigo_cliente, p.fecha_esperada, p.fecha_entrega, p.fecha_entrega + INTERVAL 2 DAYS
+    SELECT p.codigo_pedido, p.codigo_cliente, p.fecha_esperada, p.fecha_entrega, p.fecha_entrega + INTERVAL 2 DAY
     FROM pedido p
     WHERE p.fecha_entrega + INTERVAL 2 DAY < p.fecha_esperada
     ORDER BY p.codigo_pedido;
@@ -467,41 +467,86 @@ Utilizando la función ADDDATE de Mysql.
 1. Devuelve el nombre del cliente con mayor límite de crédito.
    
     ```sql
-
+    SELECT c.nombre_cliente, c.limite_credito
+    FROM cliente c
+    WHERE c.limite_credito = (
+        SELECT MAX(c.limite_credito)
+        FROM cliente c
+    )
+    ORDER BY c.nombre_cliente;
     ```
 
 2. Devuelve el nombre del producto que tenga el precio de venta más caro.
 
     ```sql
-
+    SELECT p.nombre, p.precio_venta
+    FROM producto p
+    WHERE p.precio_venta = (
+        SELECT MAX(p.precio_venta)
+        FROM producto p
+    )
+    ORDER BY p.nombre;
     ```
 
 3. Devuelve el nombre del producto del que se han vendido más unidades. (Tenga en cuenta que tendrá que calcular cuál es el número total de unidades que se han vendido de cada producto a partir de los datos de la tabla `detalle_pedido`)
 
     ```sql
-
+    SELECT p.nombre_producto
+    FROM producto p
+    WHERE p.codigo_producto = (
+        SELECT codigo_producto 
+        FROM detalle_pedido 
+        GROUP BY codigo_producto 
+        ORDER BY SUM(cantidad) DESC 
+        LIMIT 1
+    );
     ```
 
 4. Los clientes cuyo límite de crédito sea mayor que los pagos que haya realizado. (Sin utilizar `INNER JOIN`).
 
     ```sql
-
+    SELECT c.*
+    FROM cliente c
+    WHERE c.limite_credito > (
+        SELECT SUM(p.total)
+        FROM pago p
+        WHERE c.codigo_cliente = p.codigo_cliente
+    )
+    ORDER BY c.nombre_cliente;
     ```
 
 5. Devuelve el producto que más unidades tiene en stock.
 
     ```sql
-
+    SELECT p.*
+    FROM producto p
+    WHERE p.cantidad_en_stock = (
+        SELECT MAX(p.cantidad_en_stock)
+        FROM producto p
+    )
+    ORDER BY p.nombre;
     ```
 
 6. Devuelve el producto que menos unidades tiene en stock.
 
     ```sql
-
+    SELECT p.*
+    FROM producto p
+    WHERE p.cantidad_en_stock = (
+        SELECT MIN(p.cantidad_en_stock)
+        FROM producto p
+    )
+    ORDER BY p.nombre;
     ```
 
 7. Devuelve el nombre, los apellidos y el email de los empleados que están a cargo de **Alberto Soria**.
 
     ```sql
-
+    SELECT e.nombre, e.apellido1, e.apellido2, e.email
+    FROM empelado e
+    WHERE 'Alberto Soria' = (
+        SELECT CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2)
+        FROM empleado e
+        WHERE 
+    );
     ```
