@@ -561,7 +561,8 @@ Utilizando la función ADDDATE de Mysql.
     WHERE c.limite_credito >= ALL (
         SELECT c.limite_credito
         FROM cliente c
-    );
+    )
+    ORDER BY c.nombre_cliente;
     ```
 
 2. Devuelve el nombre del producto que tenga el precio de venta más caro.
@@ -572,7 +573,8 @@ Utilizando la función ADDDATE de Mysql.
     WHERE p.precio_venta >= ALL (
         SELECT p.precio_venta
         FROM producto p
-    );
+    )
+    ORDER BY p.nombre
     ```
 
 3. Devuelve el producto que menos unidades tiene en stock.
@@ -583,7 +585,8 @@ Utilizando la función ADDDATE de Mysql.
     WHERE p.cantidad_en_stock <= ALL (
         SELECT p.cantidad_en_stock
         FROM producto p
-    );
+    )
+    ORDER BY p.nombre;
     ```
 
 ### 1.4.8.3 Subconsultas con IN y NOT IN - SEXTO GRUPO
@@ -591,37 +594,68 @@ Utilizando la función ADDDATE de Mysql.
 1. Devuelve el nombre, apellido1 y cargo de los empleados que no representen a ningún cliente.
 
     ```sql
-    
+    SELECT p.nombre, p.apellido1, p.puesto
+    FROM empleado p
+    WHERE p.codigo_empleado NOT IN (
+        SELECT c.codigo_empleado_rep_ventas
+        FROM cliente c
+    )
+    ORDER BY p.nombre;
     ```
 
 2. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago.
 
     ```sql
-
+    SELECT c.*
+    FROM cliente c
+    WHERE c.codigo_cliente NOT IN (
+        SELECT p.codigo_cliente
+        FROM pago p
+    )
+    ORDER BY c.nombre_cliente;
     ```
 
 3. Devuelve un listado que muestre solamente los clientes que sí han realizado algún pago.
 
     ```sql
-
+    SELECT c.*
+    FROM cliente c
+    WHERE c.codigo_cliente IN (
+        SELECT p.codigo_cliente
+        FROM pago p
+    )
+    ORDER BY c.nombre_cliente;
     ```
 
 4. Devuelve un listado de los productos que nunca han aparecido en un pedido.
 
     ```sql
-
+    SELECT p.*
+    FROM producto p
+    WHERE p.codigo_producto NOT IN (
+        SELECT d.codigo_producto
+        FROM detalle_pedido d
+    )
+    ORDER BY p.nombre;
     ```
 
 5. Devuelve el nombre, apellidos, puesto y teléfono de la oficina de aquellos empleados que no sean representante de ventas de ningún cliente.
 
     ```sql
-
+    SELECT e.nombre, e.apellido1, e.apellido2, e.puesto, GROUP_CONCAT(o.telefono SEPARATOR ', ') AS telefono_oficina
+    FROM empleado e, oficina o
+    WHERE e.codigo_empleado NOT IN (
+        SELECT c.codigo_empleado_rep_ventas
+        FROM cliente c
+    )
+    GROUP BY e.nombre, e.apellido1, e.apellido2, e.puesto
+    ORDER BY e.nombre;
     ```
 
 6. Devuelve las oficinas donde **no trabajan** ninguno de los empleados que hayan sido los representantes de ventas de algún cliente que haya realizado la compra de algún producto de la gama `Frutales`.
 
     ```sql
-
+    
     ```
 
 7. Devuelve un listado con los clientes que han realizado algún pedido pero no han realizado ningún pago.
