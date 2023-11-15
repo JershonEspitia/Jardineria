@@ -550,3 +550,83 @@ Utilizando la función ADDDATE de Mysql.
         WHERE UPPER(CONCAT(e.nombre, ' ', e.apellido1)) = 'ALBERTO SORIA'
     );
     ```
+
+### 1.4.8.2 Subconsultas con ALL y ANY - QUINTO GRUPO
+
+1. Devuelve el nombre del cliente con mayor límite de crédito.
+
+    ```sql
+    SELECT c.nombre_cliente
+    FROM cliente c
+    WHERE c.limite_credito >= ALL (
+        SELECT c.limite_credito
+        FROM cliente c
+    );
+    ```
+
+2. Devuelve el nombre del producto que tenga el precio de venta más caro.
+
+    ```sql
+    SELECT p.nombre
+    FROM producto p
+    WHERE p.precio_venta >= ALL (
+        SELECT p.precio_venta
+        FROM producto p
+    );
+    ```
+
+3. Devuelve el producto que menos unidades tiene en stock.
+
+    ```sql
+    SELECT p.nombre, p.cantidad_en_stock
+    FROM producto p
+    WHERE p.cantidad_en_stock <= ALL (
+        SELECT p.cantidad_en_stock
+        FROM producto p
+    );
+    ```
+
+### 1.4.8.3 Subconsultas con IN y NOT IN - SEXTO GRUPO
+
+1. Devuelve el nombre, apellido1 y cargo de los empleados que no representen a ningún cliente.
+
+    ```sql
+    
+    ```
+
+2. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago.
+
+    ```sql
+
+    ```
+
+3. Devuelve un listado que muestre solamente los clientes que sí han realizado algún pago.
+
+    ```sql
+
+    ```
+
+4. Devuelve un listado de los productos que nunca han aparecido en un pedido.
+
+    ```sql
+
+    ```
+
+5. Devuelve el nombre, apellidos, puesto y teléfono de la oficina de aquellos empleados que no sean representante de ventas de ningún cliente.
+
+    ```sql
+
+    ```
+
+6. Devuelve las oficinas donde **no trabajan** ninguno de los empleados que hayan sido los representantes de ventas de algún cliente que haya realizado la compra de algún producto de la gama `Frutales`.
+
+    ```sql
+
+    ```
+
+7. Devuelve un listado con los clientes que han realizado algún pedido pero no han realizado ningún pago.
+
+    ```sql
+
+    ```
+
