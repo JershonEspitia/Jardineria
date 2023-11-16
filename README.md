@@ -733,3 +733,86 @@ Utilizando la función ADDDATE de Mysql.
         WHERE d.codigo_producto = p.codigo_producto
     );
     ```
+
+## TIPS SQL
+
+### GROUP BY
+
+1. Seleccione el nombre del cliente y la cantidad de pedidos que ha realizado cada uno.
+   
+    ```sql
+        SELECT c.nombre_cliente, COUNT(*) AS total_pedidos
+        FROM cliente c
+        JOIN pedido p ON p.codigo_cliente = c.codigo_cliente
+        GROUP BY c.nombre_cliente
+        ORDER BY c.nombre_cliente;
+    ```
+
+2. Seleccione el nombre del producto y la cantidad total de unidades que han aparecido en los pedidos, de los productos que tienen más de 30 unidades en stock.
+
+    ```sql
+        SELECT p.nombre, SUM(d.cantidad) AS total_unidades_en_pedidos
+        FROM producto p
+        JOIN detalle_pedido d ON d.codigo_producto = p.codigo_producto
+        GROUP BY p.nombre
+        HAVING SUM(p.cantidad_en_stock) > 30
+        ORDER BY p.nombre;
+    ```
+
+3. Seleccione el nombre del producto y la cantidad de unidades que han aparecido en los pedidos, de los productos que tienen más de 30 unidades en stock y su nombre es `Cerezo`.
+
+    ```sql
+        SELECT p.nombre, SUM(d.cantidad) AS total_veces_en_pedidos
+        FROM producto p
+        JOIN detalle_pedido d ON d.codigo_producto = p.codigo_producto
+        WHERE p.nombre = 'Cerezo'
+        GROUP BY p.nombre
+        HAVING SUM(p.cantidad_en_stock) > 30
+        ORDER BY p.nombre;
+    ```
+
+4. Seleccione el codigo de cliente, el nombre del cliente y la cantidad de pagos realizados que ha hecho cada cliente, donde la letra inicial del tipo de pago sea igual a `P`.
+  
+    ```sql
+        SELECT c.codigo_cliente, c.nombre_cliente, COUNT(p.total) AS total_pagos_realizados
+        FROM cliente c
+        JOIN pago p ON p.codigo_cliente = c.codigo_cliente
+        WHERE SUBSTRING(p.forma_pago, 1, 1) = 'P'
+        GROUP BY c.codigo_cliente, c.nombre_cliente, p.forma_pago
+        HAVING COUNT(p.total) >= 1
+        ORDER BY c.codigo_cliente;
+    ```
+
+5. Seleccione la inicial del nombre del cliente y la cantidad de pagos realizados que ha hecho cada cliente, donde la letra inicial del tipo de pago sea igual a `P`.
+  
+    ```sql
+        SELECT SUBSTRING(c.nombre_cliente, 1, 3) AS inicial_nombre_cliente, COUNT(p.total) AS total_pagos_realizados
+        FROM cliente c
+        JOIN pago p ON p.codigo_cliente = c.codigo_cliente
+        WHERE SUBSTRING(p.forma_pago, 1, 1) = 'P'
+        GROUP BY c.nombre_cliente
+        HAVING COUNT(p.total) >= 1
+        ORDER BY SUBSTRING(c.nombre_cliente, 1, 1);
+    ```
+
+6. Seleccione el nombre del cliente, el nombre de los empleados y muestrelos en una sola columna.
+  
+    ```sql
+        SELECT columnaTemp
+        FROM
+            (SELECT CONCAT('Cliente: ', c.nombre_cliente) AS columnaTemp
+            FROM cliente c
+            UNION ALL
+            SELECT CONCAT('Empleado: ', e.nombre) AS columnaTemp
+            FROM empleado e) AS nombre_Clientes_Empleados
+        GROUP BY columnaTemp;
+    ```
+
+7. Seleccione el codigo de la oficina y el nombre de cada uno de sus empleados, mostrando en una columna unicamente el codigo de la oficina y en la otra el nombre de todos sus empelados.
+  
+    ```sql
+        SELECT o.codigo_oficina, GROUP_CONCAT(e.nombre SEPARATOR ', ')
+        FROM oficina o
+        JOIN empleado e ON e.codigo_oficina = o.codigo_oficina
+        GROUP BY o.codigo_oficina;
+    ```
