@@ -653,14 +653,83 @@ Utilizando la función ADDDATE de Mysql.
     ```
 
 6. Devuelve las oficinas donde **no trabajan** ninguno de los empleados que hayan sido los representantes de ventas de algún cliente que haya realizado la compra de algún producto de la gama `Frutales`.
-
+   
     ```sql
-    
+    SELECT o.*
+    FROM oficina o
+    WHERE o.codigo_oficina IN (
+        SELECT DISTINCT o.codigo_oficina
+        FROM oficina o
+        JOIN empleado e ON o.codigo_oficina = e.codigo_oficina
+        JOIN cliente c ON e.codigo_empleado = c.codigo_empleado_rep_ventas
+        JOIN pedido p ON c.codigo_cliente = p.codigo_cliente
+        JOIN detalle_pedido dp ON p.codigo_pedido = dp.codigo_pedido
+        JOIN producto pro ON dp.codigo_producto = pro.codigo_producto
+        WHERE pro.gama != 'Frutales'
+    );
     ```
 
-7. Devuelve un listado con los clientes que han realizado algún pedido pero no han realizado ningún pago.
+8. Devuelve un listado con los clientes que han realizado algún pedido pero no han realizado ningún pago.
 
     ```sql
-
+    SELECT c.*
+    FROM cliente c
+    WHERE c.codigo_cliente = (
+        SELECT DISTINCT c.codigo_cliente
+        FROM cliente c
+        JOIN pedido pe ON c.codigo_cliente = pe.codigo_cliente
+        LEFT JOIN pago p ON c.codigo_cliente = p.codigo_cliente
+        WHERE p.codigo_cliente IS NULL
+        ORDER BY c.nombre_cliente
+    );
     ```
 
+### 1.4.8.4 Subconsultas con EXISTS y NOT EXISTS - SEPTIMO GRUPO
+
+1. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago.
+
+    ```sql
+    SELECT c.*
+    FROM cliente c
+    WHERE NOT EXISTS (
+        SELECT codigo_cliente
+        FROM pago p
+        WHERE p.codigo_cliente = c.codigo_cliente
+    );
+    ```
+
+2. Devuelve un listado que muestre solamente los clientes que sí han realizado algún pago.
+
+    ```sql
+    SELECT c.*
+    FROM cliente c
+    WHERE EXISTS (
+        SELECT codigo_cliente
+        FROM pago p
+        WHERE p.codigo_cliente = c.codigo_cliente
+    );
+    ```
+
+3. Devuelve un listado de los productos que nunca han aparecido en un pedido.
+
+    ```sql
+    SELECT p.*
+    FROM producto p
+    WHERE NOT EXISTS (
+        SELECT d.codigo_producto
+        FROM detalle_pedido d
+        WHERE d.codigo_producto = p.codigo_producto
+    );
+    ```
+
+4. Devuelve un listado de los productos que han aparecido en un pedido alguna vez.
+
+    ```sql
+    SELECT p.*
+    FROM producto p
+    WHERE EXISTS (
+        SELECT d.codigo_producto
+        FROM detalle_pedido d
+        WHERE d.codigo_producto = p.codigo_producto
+    );
+    ```
