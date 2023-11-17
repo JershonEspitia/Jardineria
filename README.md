@@ -867,3 +867,42 @@ Utilizando la función ADDDATE de Mysql.
     WHERE SUBSTRING(p.nombre, 1, 2) = 'Me'
     GROUP BY p.nombre;
     ```
+
+### UPDATE
+
+1. Actualice todos los productos agregando 100 unidades a su cantidad en stock.
+   
+    ```sql
+    UPDATE producto
+    SET cantidad_en_stock = cantidad_en_stock + 100;
+    ```
+
+2. Actualice el campo `fax` de todos los clientes y ponga el valor por defecto.
+   
+    ```sql
+    UPDATE cliente
+    SET fax = DEFAULT;
+    ```
+
+3. Actualice el campo `extension` de todos los empleados poniendo los 3 primeros digitos del campo telefono de oficina más la extensión del empleado.
+   
+    ```sql
+    UPDATE empleado
+    SET extension = (
+        SELECT CONCAT(SUBSTRING(o.telefono, 1, 3), ' ', empleado.extension)
+        FROM oficina o
+        WHERE o.codigo_oficina = empleado.codigo_oficina
+    );
+    ```
+
+4. Actualice el campo `extension` de todos los empleados poniendo `No tiene`, donde su oficina empiece por la letra `B`.
+   
+    ```sql
+    UPDATE empleado
+    SET extension = 'No tiene'
+    WHERE empleado.codigo_oficina IN (
+        SELECT o.codigo_oficina
+        FROM oficina o
+        WHERE o.codigo_oficina LIKE 'B%'
+    );
+    ```
