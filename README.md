@@ -816,3 +816,54 @@ Utilizando la función ADDDATE de Mysql.
         JOIN empleado e ON e.codigo_oficina = o.codigo_oficina
         GROUP BY o.codigo_oficina;
     ```
+
+### WHERE
+
+1. Seleccione toda la informacion de la tabla gama_producto donde la gama sea igual a `Frutales` y `Herramientas`.
+   
+    ```sql
+    SELECT g.*
+    FROM gama_producto g
+    WHERE g.gama IN ('Frutales', 'Herramientas');
+    ```
+
+2. Seleccione toda la informacion de la tabla gama_producto donde la gama **NO** sea igual a `Frutales` y `Herramientas`.
+   
+    ```sql
+    SELECT g.*
+    FROM gama_producto g
+    WHERE g.gama NOT IN ('Frutales', 'Herramientas');
+    ```
+
+3. Seleccione todas las gamas de productos que tienen mas de 0 productos.
+   
+    ```sql
+    SELECT g.*
+    FROM gama_producto g
+    WHERE (
+        SELECT COUNT(*)
+        FROM producto p
+        WHERE p.gama = g.gama
+    ) > 0;
+    ```
+
+4. Seleccione todos los empleados donde el pais de su oficina sea `EEUU`.
+   
+    ```sql
+    SELECT e.*
+    FROM empleado e
+    WHERE e.codigo_oficina IN (
+        SELECT o.codigo_oficina
+        FROM oficina o
+        WHERE o.pais LIKE 'EEUU'
+    );
+    ```
+
+5. Seleccione todos los productos donde su nombre empiece con `Me`.
+   
+    ```sql
+    SELECT p.*
+    FROM producto p
+    WHERE SUBSTRING(p.nombre, 1, 2) = 'Me'
+    GROUP BY p.nombre;
+    ```
